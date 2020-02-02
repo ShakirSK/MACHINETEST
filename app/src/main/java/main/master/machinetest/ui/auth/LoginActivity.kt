@@ -1,11 +1,13 @@
 package main.master.machinetest.ui.auth
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import main.master.machinetest.R
 import main.master.machinetest.databinding.ActivityLoginBinding
+import main.master.machinetest.ui.home.WeatherActivity
 import main.master.machinetest.utils.toast
 
 
@@ -30,6 +32,8 @@ class LoginActivity : AppCompatActivity(),AuthListener {
 
     override fun onSuccess() {
         toast("LoginSuccess")
+        val intent = Intent(this, WeatherActivity::class.java)
+        startActivity(intent)
     }
 
     override fun onFailure(message: String) {

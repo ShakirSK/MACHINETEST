@@ -15,14 +15,14 @@ class LoginActivity : AppCompatActivity(),AuthListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
+        //Binding the R.layout.activity_login with databinding
         var binding : ActivityLoginBinding = DataBindingUtil.setContentView(this,R.layout.activity_login)
 
+        //AuthViewModel which has our data
         var viewmodel = ViewModelProviders.of(this).get(AuthViewModel::class.java)
-
+        //binidng viewmodel
         binding.viewmodel = viewmodel
-
+        //listener
         viewmodel.authListener = this
     }
 

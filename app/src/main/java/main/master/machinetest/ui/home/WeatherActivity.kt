@@ -13,23 +13,26 @@ import main.master.machinetest.databinding.ActivityWeatherBinding
 
 class WeatherActivity : AppCompatActivity() {
 
-
+    //WeatherViewModelFactory is used for ViewModelProviders bcz FootballViewModel has constructor
     private lateinit var factory: WeatherViewModelFactory
     private lateinit var viewModel: WeatherViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_weather)
 
         val binding : ActivityWeatherBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_weather)
+
         val api = MyApi()
         val repository = WeatherRepository(api)
         factory = WeatherViewModelFactory(repository)
         viewModel = ViewModelProviders.of(this,factory).get(WeatherViewModel::class.java)
 
-
+        //viewmodel method is call where we get the data from webserice in a cycle of MVVM
+        //( APIClient - Repository - Viewmodal - LiveData - Databinding(UI) )
         viewModel.getWeather()
+
+        //here weather is our live data which observe the changes
         viewModel.weather.observe(this, Observer {
                 weather ->
             R.layout.activity_weather.also {

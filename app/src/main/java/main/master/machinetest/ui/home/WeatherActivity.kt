@@ -1,8 +1,11 @@
 package main.master.machinetest.ui.home
 
+import android.content.Context
+import android.net.ConnectivityManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -28,19 +31,42 @@ class WeatherActivity : AppCompatActivity() {
         factory = WeatherViewModelFactory(repository)
         viewModel = ViewModelProviders.of(this,factory).get(WeatherViewModel::class.java)
 
-        //viewmodel method is call where we get the data from webserice in a cycle of MVVM
-        //( APIClient - Repository - Viewmodal - LiveData - Databinding(UI) )
-        viewModel.getWeather()
 
-        //here weather is our live data which observe the changes
-        viewModel.weather.observe(this, Observer {
-                weather ->
-            R.layout.activity_weather.also {
-                binding.viewmodel = weather
-                Log.i("weatherresponse2",weather.main.temp.toString())
-            }
-        })
+        val internet : Boolean
+        internet = checkConnectivity()
+        if (internet == true) {
+
+            //viewmodel method is call where we get the data from webserice in a cycle of MVVM
+            //( APIClient - Repository - Viewmodal - LiveData - Databinding(UI) )
+            viewModel.getWeather()
+
+            //here weather is our live data which observe the changes
+            viewModel.weather.observe(this, Observer {
+                    weather ->
+                R.layout.activity_weather.also {
+                    binding.viewmodel = weather
+                    Log.i("weatherresponse2",weather.main.temp.toString())
+                }
+            })
+
+        }
+
+
+
 
 
     }
+
+    private fun checkConnectivity():Boolean{
+        var cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        var activityNetwork = cm.activeNetworkInfo
+        val isConnected = activityNetwork != null && activityNetwork.isConnectedOrConnecting
+
+        if(!isConnected){
+            Toast.makeText(this,"Check network connection",Toast.LENGTH_SHORT).show()
+            return false
+        }
+        return true
+    }
+
 }
